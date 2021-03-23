@@ -21,7 +21,7 @@
 //#include <stdio.h>
 using namespace std;
 
-int sim_calo_gobrrrr() {
+int start_sim_calo() {
     vector<Double_t> Signal,                    // Cell signal
     dSignal,                   // first cell signal
     Xt_C,                      // Capacitive crosstalk signal
@@ -77,18 +77,37 @@ int sim_calo_gobrrrr() {
     //new_cluster->GenerateRandomDelays(5, 5, 4);
     double impact_energy = 50000;
     double tau_0 = 0.2;
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 1000; i++) {
         cout << "iteration: " << i << endl;
         new_cluster->FillClusterEnergy(impact_energy);
         new_cluster->FillSignalSamples(tau_0);
         new_cluster->FillTree();
-        //new_cluster->CleanUp();
+        new_cluster->CleanUp();
 
     }
     
     new_cluster->ClusterTree->Write();    
     calo_out->Close();
+    
+/*
+    vector <double> s;
+    s.push_back(0.60356863);
+    s.push_back(0.98365222);
+    s.push_back(0.63428977);
+    s.push_back(0.22389657);
+    vector <double> ds;
+    ds.push_back(0.03439886);
+    ds.push_back(-0.00457073);
+    ds.push_back(-0.01829383);
+    ds.push_back(-0.01301406);
+    vector <double> noise;
+    noise.push_back(3.34115829e-03);
+    noise.push_back(-3.78917872e-03);
+    noise.push_back(-1.74568716e-03);
+    noise.push_back(1.73092171e-03);
 
+    new_cluster->OptimalFiltering(s, ds, noise);
+    */
     //cout << "cells in l1: " <<  new_cluster->layers
     //new_cluster->FillRecoEnergy();
     //new_cluster->FillNTuples(TTree);

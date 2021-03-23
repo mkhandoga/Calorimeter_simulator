@@ -28,8 +28,12 @@ class CaloClusterGenerator
 {
 
     public:
+    pair<double,double> OptimalFiltering(vector<double> signal, vector<double> dsignal, vector<double> noise);
+    void FillXtalkAmplitudes(bool ifxtc, bool ifxtl);
+
     CaloClusterGenerator();
-    
+    TTree *ClusterTree;
+
     struct ClusterCell {
         int layer;
         
@@ -46,12 +50,19 @@ class CaloClusterGenerator
         std::vector<double> sampling_noise;
         std::vector<double> samples_truth;
         std::vector<double> dsamples_truth;
+        std::vector<double> samples_truthXtC;
+        std::vector<double> dsamples_truthXtC;
+
         std::vector<double> Xt_C;
+
         std::vector<double> dXt_C;
         std::vector<double> Xt_L;
         std::vector<double> dXt_L;
+
         std::vector<double> samples_reco;
         
+        double Xt_C_amplitude;
+        double Xt_L_amplitude;
         double E_truth;
         double E_reco;
         double tau;
@@ -60,11 +71,15 @@ class CaloClusterGenerator
     
     int const static n_layers = 3;
     struct ClusterLayer {
-        vector<ClusterCell> layer_cells;
-        
+        vector<ClusterCell*> layer_cells;
+        map<pair<int,int>,ClusterCell> layer_cells_map;
+
         double eta_cell_size_factor;
         double phi_cell_size_factor;
 
+        double eta_cell_size;
+        double phi_cell_size;
+        
         int layer_number;
         int n_cells_eta;
         int n_cells_phi;
@@ -105,16 +120,23 @@ class CaloClusterGenerator
     
     Int_t EnergyMeVtoADC(Double_t E_cell, Int_t Layer);
     
-    void InitCluster(double impact_eta = 0.025, double impact_phi = M_PI/128, int eta_size = 5, int phi_size = 5);
+    void InitCluster(double cluster_center_eta, double cluster_center_phi, int eta_size = 5, int phi_size = 5);
 
     void InitSideLayers(ClusterLayer &central_layer, ClusterLayer &side_layer );
 
     void InitLayerCells(ClusterLayer &layer );
 
     void FillSignalSamples(double tau_0);
-    
-    void CaloClusterGenerator::FillTree(TTree* calo_tree);
 
+    void InitTree(string TreeName);
+    
+    void InitFunctions();
+    
+    void  FillTree();
+    TMatrixD GetCorrelationMatrix( TVectorD vect);
+    vector<ClusterCell*> GetListOfNeighbours(int layer, int eta, int phi, bool includeDiagonal);
+    
+    void CleanUp();
 
     void GetClusterEnergy( Bool_t fluctEnergy,
                           vector<Double_t> &E0_impact,
@@ -149,8 +171,16 @@ class CaloClusterGenerator
 
     private:
     
-
+    TF3* IntegraCell;
+    TF1* CellM;
+    TF1* XTalk;
     
+    
+    double cluster_center_eta;
+    double cluster_center_phi;
+    
+    double impact_eta;
+    double impact_phi;
     
     TRandom3 *RandomGen;
     
@@ -276,6 +306,16 @@ class CaloClusterGenerator
     /// Sampling media
     Double_t Fs = g_X0eff/(g_da + g_dp) ;
     Double_t Tsamp = (1 - e)*t2 + t1sam/Fs + Thom ;
+
+    vector <double> cell_energies_l2;
+    vector <double> cell_signal_samples_l2;
+    vector <double> cell_noise_samples_l2;
+    vector <double> cell_xtc_samples_l2;
+    vector <double> cell_xtl_samples_l2;
+    vector <double> cell_xtc_amplitudes_l2;
+    vector <double> cell_xtl_amplitudes_l2;
+    double layer2_energy;
+    double impact_energy;
 
 
 };
