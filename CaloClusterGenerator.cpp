@@ -18,10 +18,9 @@ using namespace::std;
 CaloClusterGenerator:: CaloClusterGenerator(){
     
     RandomGen = new TRandom3();
-//    this->cluster_center_eta = 0.4*0.025;
-//    this->cluster_center_phi = 2.15*M_PI/128;
-    cluster_center_eta = 0.4*0.025;
-    cluster_center_phi = 0.4*M_PI/128;
+
+    cluster_center_eta = 0.025;
+    cluster_center_phi = M_PI/128;
     
     
     int eta_size = 5; // cells in the second layer
@@ -34,8 +33,6 @@ CaloClusterGenerator:: CaloClusterGenerator(){
     InitTree(TreeName);
     InitFunctions();
     InitOpFiltCoefficients();
-    
-    //for (int i = 0; i < 100; i++) cout << " i: " << i << " value: " << GenerateSignalSample()->Eval(i) << endl;
     
 }
 
@@ -53,12 +50,9 @@ void CaloClusterGenerator::InitOpFiltCoefficients(){
     ai = ofcoefs.first;
     bi = ofcoefs.second;
     
-   
-    
     //cout << "ai2" << ai[2] << endl;
 
 }
-
 
 void CaloClusterGenerator::InitFunctions() {
     IntegraCell = new TF3("IntegraCell", "(0.0262470945510689 * pow(0.11661276855717342,-1 + [0]) * pow([1],[0]) * abs((z * cosh([3]) * cosh(x)) / sqrt(cosh(2 * [3]) + cosh(2 * x) - 2 * cos([2] - y) * (cos([2] - y) + 2 * sinh([3]) * sinh(x)))) * pow(abs(-([4] * cosh([3])) + z * cos([2] - y) * sech([3]) + z * sinh(x) * tanh([3])),-1 + [0]) * ((2 * (1 - 2.6150800000000003 * pow(exp(1),-pow(exp(1),(0.43466000000000005 - (0.11661276855717342 * [1] * abs(-([4] * cosh([3])) + z * cos([2] - y) * sech([3]) + z * sinh(x) * tanh([3]))) / (-1 + [0])) / (1.313 - 0.0686 * TMath::Log([5]))) + (0.43466000000000005 - (0.11661276855717342 * [1] * abs(-([4] * cosh([3])) + z * cos([2] - y) * sech([3]) + z * sinh(x) * tanh([3]))) / (-1 + [0])) / (1.313 - 0.0686 * TMath::Log([5]))) - 0.30939226519337015 * (0.348 - 0.4491923844822321 / pow(exp(1),pow(-1 + (0.11661276855717342 * [1] * abs(-([4] * cosh([3])) + z * cos([2] - y) * sech([3]) + z * sinh(x) * tanh([3]))) / (-1 + [0]),2)))) * pow(-0.04331491712707183 - 0.3463399226148051 / pow(exp(1),(0.11661276855717342 * [1] * abs(-([4] * cosh([3])) + z * cos([2] - y) * sech([3]) + z * sinh(x) * tanh([3]))) / (-1 + [0])) + 0.60338 * (pow(exp(1),-2.59 * (-0.645 + (0.11661276855717342 * [1] * abs(-([4] * cosh([3])) + z * cos([2] - y) * sech([3]) + z * sinh(x) * tanh([3]))) / (-1 + [0]))) + pow(exp(1),(-0.645 + (0.11661276855717342 * [1] * abs(-([4] * cosh([3])) + z * cos([2] - y) * sech([3]) + z * sinh(x) * tanh([3]))) / (-1 + [0])) * (0.3585 + 0.0421 * TMath::Log([5])))),2) * z * sqrt(1 - ((2 + cos(2 * [2] - 2 * y) - cosh(2 * x)) * pow(sech([3]),2)) / 2. - 2 * cos([2] - y) * sech([3]) * sinh(x) * tanh([3]))) / pow(pow(-0.04331491712707183 - 0.3463399226148051 / pow(exp(1),(0.11661276855717342 * [1] * abs(-([4] * cosh([3])) + z * cos([2] - y) * sech([3]) + z * sinh(x) * tanh([3]))) / (-1 + [0])) + 0.60338 * (pow(exp(1),-2.59 * (-0.645 + (0.11661276855717342 * [1] * abs(-([4] * cosh([3])) + z * cos([2] - y) * sech([3]) + z * sinh(x) * tanh([3]))) / (-1 + [0]))) + pow(exp(1),(-0.645 + (0.11661276855717342 * [1] * abs(-([4] * cosh([3])) + z * cos([2] - y) * sech([3]) + z * sinh(x) * tanh([3]))) / (-1 + [0])) * (0.3585 + 0.0421 * TMath::Log([5])))),2) + pow(z,2) * (1 - ((2 + cos(2 * [2] - 2 * y) - cosh(2 * x)) * pow(sech([3]),2)) / 2. - 2 * cos([2] - y) * sech([3]) * sinh(x) * tanh([3])),2) + (2 * (2.6150800000000003 * pow(exp(1),-pow(exp(1),(0.43466000000000005 - (0.11661276855717342 * [1] * abs(-([4] * cosh([3])) + z * cos([2] - y) * sech([3]) + z * sinh(x) * tanh([3]))) / (-1 + [0])) / (1.313 - 0.0686 * TMath::Log([5]))) + (0.43466000000000005 - (0.11661276855717342 * [1] * abs(-([4] * cosh([3])) + z * cos([2] - y) * sech([3]) + z * sinh(x) * tanh([3]))) / (-1 + [0])) / (1.313 - 0.0686 * TMath::Log([5]))) + 0.30939226519337015 * (0.348 - 0.4491923844822321 / pow(exp(1),pow(-1 + (0.11661276855717342 * [1] * abs(-([4] * cosh([3])) + z * cos([2] - y) * sech([3]) + z * sinh(x) * tanh([3]))) / (-1 + [0]),2)))) * z * pow(0.018819337016574587 + 0.027777161470318713 / pow(exp(1),(0.11661276855717342 * [1] * abs(-([4] * cosh([3])) + z * cos([2] - y) * sech([3]) + z * sinh(x) * tanh([3]))) / (-1 + [0])) + (0.012750673339578456 * [1] * abs(-([4] * cosh([3])) + z * cos([2] - y) * sech([3]) + z * sinh(x) * tanh([3]))) / (-1 + [0]) + 0.00319 * TMath::Log([5]),2) * sqrt(1 - ((2 + cos(2 * [2] - 2 * y) - cosh(2 * x)) * pow(sech([3]),2)) / 2. - 2 * cos([2] - y) * sech([3]) * sinh(x) * tanh([3]))) / pow(pow(0.018819337016574587 + 0.027777161470318713 / pow(exp(1),(0.11661276855717342 * [1] * abs(-([4] * cosh([3])) + z * cos([2] - y) * sech([3]) + z * sinh(x) * tanh([3]))) / (-1 + [0])) + (0.012750673339578456 * [1] * abs(-([4] * cosh([3])) + z * cos([2] - y) * sech([3]) + z * sinh(x) * tanh([3]))) / (-1 + [0]) + 0.00319 * TMath::Log([5]),2) + pow(z,2) * (1 - ((2 + cos(2 * [2] - 2 * y) - cosh(2 * x)) * pow(sech([3]),2)) / 2. - 2 * cos([2] - y) * sech([3]) * sinh(x) * tanh([3])),2))) / (pow(exp(1),0.11661276855717342 * [1] * abs(-([4] * cosh([3])) + z * cos([2] - y) * sech([3]) + z * sinh(x) * tanh([3]))) * TMath::Gamma([0]))") ;
@@ -111,20 +105,7 @@ void CaloClusterGenerator::InitCluster( double cluster_center_eta, double cluste
 
     InitSideLayers(my_cluster->layers[1],my_cluster->layers[2]);
 
-    /*
-    cout << "eta_max " << my_cluster->layers[0].eta_max << " layer1.eta_min " << my_cluster->layers[0].eta_min << " my_cluster->layers[0].n_cells_eta " << my_cluster->layers[0].n_cells_eta  << endl;
-    cout << "phi_max" << my_cluster->layers[0].phi_max << " layer1.phi_min " << my_cluster->layers[0].phi_min << " my_cluster->layers[0].n_cells_phi " << my_cluster->layers[0].n_cells_phi  << endl;
 
-    cout << "eta_max " << my_cluster->layers[1].eta_max << " layer2.eta_min " << my_cluster->layers[1].eta_min << " my_cluster->layers[1].n_cells_eta " << my_cluster->layers[1].n_cells_eta  << endl;
-    cout << "phi_max" << my_cluster->layers[1].phi_max << " layer2.phi_min " << my_cluster->layers[1].phi_min << " my_cluster->layers[1].n_cells_phi " << my_cluster->layers[1].n_cells_phi  << endl;
-    
-    cout << "eta_max " << my_cluster->layers[2].eta_max << " layer3.eta_min " << my_cluster->layers[2].eta_min << " my_cluster->layers[2].n_cells_eta " << my_cluster->layers[2].n_cells_eta  << endl;
-    cout << "phi_max" << my_cluster->layers[2].phi_max << " layer3.phi_min " << my_cluster->layers[2].phi_min << " my_cluster->layers[2].n_cells_phi " << my_cluster->layers[2].n_cells_phi  << endl;
-
-    cout <<"layer: " << my_cluster->layers[0].layer_number << " layer.layer_cells.size()" << my_cluster->layers[0].layer_cells.size() << endl;
-    cout <<"layer: " << my_cluster->layers[1].layer_number << " layer.layer_cells.size()" << my_cluster->layers[1].layer_cells.size() << endl;
-    cout <<"layer: " << my_cluster->layers[2].layer_number << " layer.layer_cells.size()" << my_cluster->layers[2].layer_cells.size() << endl;
-     */
     my_cluster->layers[0].r_min = g_R0;
     my_cluster->layers[0].r_max = g_R0+g_Rs1;
     
@@ -149,16 +130,6 @@ void CaloClusterGenerator::InitCluster( double cluster_center_eta, double cluste
     }
     
     cout <<"layer: " << my_cluster->layers[0].layer_number << " layer.layer_cells.size()" << my_cluster->layers[0].layer_cells.size() << endl;
-    /*
-    int k = 2;
-    cout <<"layer etamax: " << my_cluster->layers[k].eta_max << " cells etamax:" << my_cluster->layers[k].layer_cells.back().eta_max << endl;
-    cout <<"layer etamin: " << my_cluster->layers[k].eta_min << " cells etamin:" << my_cluster->layers[k].layer_cells[0].eta_min << endl;
-    cout <<"layer phimax: " << my_cluster->layers[k].phi_max << " cells phimax:" << my_cluster->layers[k].layer_cells.back().phi_max << endl;
-    cout <<"layer phimin: " << my_cluster->layers[k].phi_min << " cells phimin:" << my_cluster->layers[k].layer_cells[0].phi_min << endl;
-    //cout <<"layer: " << my_cluster->layers[1].layer_number << " layer.layer_cells.size()" << my_cluster->layers[1].layer_cells.size() << endl;
-    //cout <<"layer: " << my_cluster->layers[2].layer_number << " layer.layer_cells.size()" << my_cluster->layers[2].layer_cells.size() << endl;
-     */
-    
 }
 
 void CaloClusterGenerator::InitSideLayers(ClusterLayer &central_layer, ClusterLayer &side_layer ){
@@ -196,9 +167,6 @@ void CaloClusterGenerator::InitLayerCells(ClusterLayer &layer ){
             layer.layer_cells_map[address].r_max = layer.r_max;
             layer.layer_cells_map[address].layer = layer.layer_number;
 
-            //cout <<"layer: " << layer.layer_number << " layer.layer_cells_map[address].r_min " << layer.layer_cells_map[address].r_min << endl;
-            //cout <<"layer: " << layer.layer_number << " layer.layer_cells_map[address].r_max " << layer.layer_cells_map[address].r_max << endl;
-
         }
     }
     //cout <<"layer: " << layer.layer_number << " layer.layer_cells.size()" << layer.layer_cells.size() << endl;
@@ -209,10 +177,12 @@ void CaloClusterGenerator::FillClusterEnergy(double e_impact){
     
     double rand_eta = RandomGen->Uniform();
     double rand_phi = RandomGen->Uniform();
+
     my_cluster->E_impact = e_impact;
 
-    //rand_eta = 1/2;
-    //rand_phi = 1/2;
+    //impact_eta = cluster_center_eta;
+    //impact_phi = cluster_center_phi;
+    
     
     impact_eta = cluster_center_eta - g_DeltaEtaS2/2 +rand_eta*g_DeltaEtaS2;
     impact_phi = cluster_center_phi - g_DeltaPhiS2/2 +rand_phi*g_DeltaPhiS2;
@@ -266,88 +236,6 @@ void CaloClusterGenerator::FillClusterEnergy(double e_impact){
 };
 
 
-
-void CaloClusterGenerator::GetClusterLimits( Double_t Lay, Double_t& dPhi, Double_t& dEta, Double_t& nPhi, Double_t& nEta, Double_t& Rmin, Double_t& Rmax ){
-    if( Lay == 1){
-        /* Layer = 1;    */
-        dPhi  = 4*g_DeltaPhiS2 ;          // ~0.09817
-        dEta  = g_DeltaEtaS2/8 ;          // Eta increment on layer
-        nPhi  = ceil(g_nPhiS2*g_DeltaPhiS2/dPhi) ;
-        nEta  = ceil(g_nEtaS2*g_DeltaEtaS2/dEta) ;
-        Rmin  = g_R0 ;
-        Rmax  = g_R0 + g_Rs1 ;
-    }
-    else if(Lay == 2){
-        /* Layer = 2; */
-        dPhi  = g_DeltaPhiS2;             // M_PI/128 ~ 0.02545
-        dEta  = g_DeltaEtaS2;             // 0.025 ;
-        nPhi  = g_nPhiS2;
-        nEta  = g_nEtaS2;
-        Rmin  = g_R0 + g_Rs1 ;
-        Rmax  = Rmin + g_Rs2 ;
-    }
-    else if(Lay == 3){
-        /* Layer = 3 ; */
-        dPhi  = g_DeltaPhiS2 ;            // same size of S2
-        dEta  = 2*g_DeltaEtaS2 ;
-        nPhi  = ceil(g_nPhiS2*g_DeltaPhiS2/dPhi) ;
-        nEta  = ceil(g_nEtaS2*g_DeltaEtaS2/dEta) ;
-        Rmin  = g_R0 + g_Rs1 + g_Rs2 ;
-        Rmax  = Rmin + g_Rs3 ;
-    }
-}
-
-void CaloClusterGenerator::AdjustCoordinates( Double_t &dEta, Double_t &nEta, Double_t &EtaMin, Double_t &dPhi, Double_t &nPhi, Double_t &PhiMin ){
-    Double_t eta0, phi0 ;
-    
-    if ( Int_t(nPhi)%2 != true ){
-        phi0 = nPhi/2 ;                 // nPhi odd
-    }else{
-        phi0 = floor(nPhi/2 + 1) ;      // nPhi even
-    }
-    if ( Int_t(nEta)%2 != true ){
-        eta0 = nEta/2 ;                 // nEta odd
-    }else{
-        eta0 = floor(nEta/2 + 1) ;      // nEta even
-    }
-    
-    // Adjust of the PhiMin with the cordinates of impact to calculate the integral always on a full cell
-    if ( g_PhiImpact/dPhi != floor(g_PhiImpact/dPhi) ){
-        PhiMin = dPhi*( floor(g_PhiImpact/dPhi) - floor(nPhi/2.)  ) ;
-        //PhiMin = dPhi*(floor( g_PhiImpact/dPhi ) - phi0 ) ;
-    }
-    else{
-        // Adjust the coordinate to the first bottom cell of the cluster
-        PhiMin = g_PhiImpact - dPhi*(floor(nPhi/2.)  ) ;
-        //PhiMin = g_PhiImpact - dPhi*phi0 ;
-    }
-    // Adjust of the EtaMin with the coordinates of the impact to calculate the integral always on a full cell
-    if ( g_EtaImpact/dEta != floor(g_EtaImpact/dEta) ){
-        EtaMin = dEta*( floor(g_EtaImpact/dEta) - floor(nEta/2.)  ) ;
-        //EtaMin = dEta*( floor(g_EtaImpact/dEta) - eta0 ) ;
-    }
-    else{
-        // Adjust the coordinate to the first left cell of the cluster. **This implies that the maximum energy is on the center of the matrix
-        EtaMin = g_EtaImpact - dEta*(floor(nEta/2.)  ) ;
-        //EtaMin = g_EtaImpact - dEta*eta0 ;
-    }
-}// end of function
-
-vector <double> CaloClusterGenerator::GenerateRandomDelays(Int_t n_etaL2, Int_t n_PhiL2, Int_t n_samples){
-    vector <double> cell_delays_collection;
-    for (Int_t i = 0; i < n_etaL2*n_PhiL2*n_samples; i++){
-        if (i == 0){
-            cell_delays_collection.push_back(0) ;
-        }
-        else{
-            // The delay beetwen the source clock and each one cell 0.3 ns
-            cell_delays_collection.push_back(abs(25 - RandomGen->Gaus(25, 0.3))) ;
-            cout << cell_delays_collection.back() << endl;
-        }
-    }
-    return cell_delays_collection;
-}
-
 // Function to calculatin Energie by profiles radial and longitudinal
 /* Double_t IntegEnerCell( Double_t tMin , Double_t tMax, Double_t EtaMin , Double_t EtaMax , Double_t PhiMin, Double_t PhiMax ){ */
 Double_t CaloClusterGenerator::IntegEnerCell( Double_t EtaMin ,
@@ -395,217 +283,16 @@ Double_t CaloClusterGenerator::IntegEnerCell( Double_t EtaMin ,
     
     if (isnan(integral)){
         cout << "Integral is NaN. Trying to regularize." << endl;
-        while (isnan(integral) || r < 3) {
+        while (isnan(integral) && r < 3) {
             integral = IntegraCell -> Integral( EtaMin, EtaMax-r*epsilon, PhiMin+r*epsilon, PhiMax, Rmin, Rmax, 1e-6 );
             r++;
             cout << "Regularization iteration " << r << " out of 3. Integral: " << integral << endl;
         }
     }
-
     return integral ;
 } // end of function
 
-Int_t CaloClusterGenerator::EnergyMeVtoADC(Double_t E_cell, Int_t Layer){
-    Double_t F1 = 1. , // F1 = F(µA  to MeV) => MeV/µA
-    F2 = 1. , // F2 = F(DAC to µA) => µA/DAC
-    /// F1*F2 = MeV/DAC => 1/(F1*F2) => DAC/MeV
-    E_dac = 0. ;
-    
-    if (Layer == 1){
-        F1 = 374.14 ;
-        F2 = 0.024  ;
-    }
-    else if (Layer == 2){
-        F1 = 374.14 ;
-        F2 = 0.074  ;
-    }
-    else if (Layer == 3){
-        F1 = 316.61 ;
-        F2 = 0.074  ;
-    }
-    E_dac = E_cell/(F1*F2) + g_ADCpedestal ;
-    
-    return E_dac ;
-} // end of function
 
-void CaloClusterGenerator::GetClusterEnergy( Bool_t fluctEnergy,
-                   vector<Double_t> &E0_impact,
-                   vector<Double_t> &sumEnergyLayer,
-                   vector<Double_t> &EnergyPerCell_S1,
-                   vector<Double_t> &EnergyADC_S1,
-                   vector<Double_t> &EnergyPerCell_S2,
-                   vector<Double_t> &EnergyADC_S2,
-                   vector<Double_t> &EnergyPerCell_S3,
-                   vector<Double_t> &EnergyADC_S3 ){
-    Double_t    PhiMin   = 0. ,
-    PhiMin0  = 0. ,
-    PhiMax   = 0. ,
-    dPhi     = 0. ,
-    nPhi     = 0. ,
-    EtaMin   = 0. ,
-    EtaMax   = 0. ,
-    dEta     = 0. ,
-    nEta     = 0. ,
-    tMin     = 0. ,
-    tMax     = 0. ,
-    Rmin     = 0. ,
-    Rmax     = 0. ,
-    sumS1    = 0. ,
-    sumS2    = 0. ,
-    sumS3    = 0. ,
-    EnerCell = 0. ;
-    TMatrixD S2_Energy(5,5);
-    TMatrixD S3_Energy(5,5);
-    sumEnergyLayer.clear() ;
-    EnergyPerCell_S1.clear() ;
-    EnergyPerCell_S2.clear() ;
-    EnergyPerCell_S3.clear() ;
-    EnergyADC_S1.clear() ;
-    EnergyADC_S2.clear() ;
-    EnergyADC_S3.clear() ;
-    for(Int_t layer = 1 ; layer <= 3 ; ++layer){
-        EnerCell = 0 ;
-        this->GetClusterLimits( layer, dPhi, dEta, nPhi, nEta, Rmin, Rmax ) ;
-        
-        // Adjust of the coordinates of impact point to calculating energy on full size of the each one cells
-        this->AdjustCoordinates( dEta, nEta, EtaMin, dPhi, nPhi, PhiMin ) ;
-        PhiMin0 = PhiMin;
-        ///* *************************** */
-        // loop to cover eta
-        //cout << "rows " << nEta << " " << EnergyPerCell_S1.GetNrows() << " Column " << nPhi << " " << EnergyPerCell_S1.GetNcols() << endl;
-        
-        for( Int_t iEta = 0 ; iEta < nEta ; ++iEta ){//
-            EtaMax  = EtaMin + dEta ;
-            // loop to cover phi
-            for( Int_t iPhi = 0 ; iPhi < nPhi ; ++iPhi ){//
-                PhiMax = PhiMin + dPhi ;
-                
-                //EnerCell = g_E0*IntegEnerCell( EtaMin, EtaMax, PhiMin, PhiMax, Rmin, Rmax ) ;
-                // /************************************/
-                // /* 0.1*sqrt(g_E0/1e3) - This value is the fluctuation on the impact energy */
-                // /************************************/
-                if (fluctEnergy == true ){
-                    E0_impact.push_back(1e3*RandomGen->Gaus( g_E0/1e3, 0.1*sqrt(g_E0/1e3))) ;
-                }else{
-                    //cout << "No fluctuations on Energy" << endl;
-                    E0_impact.push_back(g_E0) ;
-                }
-                EnerCell = E0_impact.back()*this->IntegEnerCell( EtaMin, EtaMax, PhiMin, PhiMax, Rmin, Rmax ) ;
-                
-                if (layer == 1){
-                    EnergyPerCell_S1.push_back(EnerCell) ;
-                    EnergyADC_S1.push_back(this->EnergyMeVtoADC(layer, EnerCell)) ;
-                    sumS1 += EnerCell/1e3;
-                }else if (layer == 2){
-                    EnergyPerCell_S2.push_back(EnerCell) ;
-                    EnergyADC_S2.push_back(this->EnergyMeVtoADC(layer, EnerCell)) ;
-                    S2_Energy(iEta,iPhi) = EnerCell/1e3 ;
-                    sumS2 += EnerCell/1e3;
-                }else if (layer == 3){
-                    EnergyPerCell_S3.push_back(EnerCell) ;
-                    EnergyADC_S3.push_back(this->EnergyMeVtoADC(layer, EnerCell)) ;
-                    S3_Energy(iEta,iPhi) = EnerCell/1e3 ;
-                    sumS3 += EnerCell/1e3;
-                }
-                
-                sumEnergyLayer[layer-1] += EnerCell ;
-                
-                PhiMin += dPhi ;
-            }//end loop for phi
-            PhiMin = PhiMin0;
-            EtaMin += dEta ;
-        } // end loop for eta
-        
-        //S2_Energy.Print() ;
-        //S3_Energy.Print() ;
-        //cout << "sum S1 = " << setprecision(4)<< sumS1 << " GeV  => " << 100*sumS1/(sumS1+sumS2+sumS3) << " % \n" <<
-        //        "sum S2 = " << setprecision(4)<< sumS2 << " GeV  => " << 100*sumS2/(sumS1+sumS2+sumS3) << " % \n" <<
-        //        "sum S3 = " << setprecision(4)<< sumS3 << " GeV  => " << 100*sumS3/(sumS1+sumS2+sumS3) << " % \n" << endl;
-        //cin.get() ;
-    } // end of loop for layer
-    
-    //cout << "Sum S1: " << sumEnergyLayer[0]/1e3 << " | Sum S2: "  << sumEnergyLayer[1]/1e3 << " | Sum S3: "  << sumEnergyLayer[2]/1e3 << endl;
-    //cout << "S1:  "<< sumEnergyLayer[0]/500 << " % | S2: "  << sumEnergyLayer[1]/500 << " % | S3: "<< sumEnergyLayer[2]/500 << " %" << endl;
-} // end of function
-
-void  CaloClusterGenerator::GenerateCellSamples(vector<Double_t> EnergyPerCell_S2,
-                 vector<Double_t> &samp_Energy ,
-                 vector<Double_t> &samp_Signal ,
-                 vector<Double_t> &samp_dSignal,
-                 vector<Double_t> &samp_Xt_C  ,
-                 vector<Double_t> &samp_dXt_C ,
-                 vector<Double_t> &samp_Xt_L  ,
-                 vector<Double_t> &samp_dXt_L ,
-                 vector<Double_t> &samp_Noise ,
-                 vector<Double_t> &samp_SigNoise ,
-                 vector<Double_t> &samp_SigXt_C ,
-                 vector<Double_t> &samp_SigXt_L ,
-                 vector<Double_t> &samp_SigXt_CL ,
-                 vector<Double_t> &samp_SigNoiseXt_C ,
-                 vector<Double_t> &samp_SigNoiseXt_L ,
-                 vector<Double_t> &samp_SigNoiseXt_CL ){
-    
-    samp_Energy.clear();
-    samp_Signal.clear();
-    samp_dSignal.clear();
-    samp_Xt_C.clear();
-    samp_dXt_C.clear();
-    samp_Xt_L.clear();
-    samp_dXt_L.clear();
-    samp_Noise.clear();
-    samp_SigNoise.clear();
-    samp_SigXt_C.clear();
-    samp_SigXt_L.clear();
-    samp_SigXt_CL.clear();
-    samp_SigNoiseXt_C.clear();
-    samp_SigNoiseXt_L.clear();
-    samp_SigNoiseXt_CL.clear();
-    // 100 samples is because of we have 5x5 cells on the cluster with 4 sample each
-    g_tDelayCell = GenerateRandomDelays(g_nEtaS2, g_nPhiS2, int(g_nSamp));
-
-    for (int i = 0; i < g_tDelayCell.size(); i++)  cout << "i:" << i << " " << g_tDelayCell[i] << endl;
-    for (UInt_t i = 0; i < g_nEtaS2*g_nPhiS2*g_nSamp; i++){
-        // cin.get();
-
-        samp_Noise.push_back(g_AmpNoise/g_ToNormNoise*RandomGen->Gaus (0, 2)) ;
-
-        samp_Signal.push_back(GenerateSignalSample()-> Eval( (i%4 + 1 )*25 + g_tDelayCell[ i ], 0., 0.)) ;
-        samp_dSignal.push_back(GenerateSignalSample()-> Derivative( (i%4 + 1)*25 + g_tDelayCell[ i ])) ;
-
-        samp_Xt_C.push_back(g_AmpXt_C*GenerateXTalkSample()-> Eval( (i%4 + 1)*25 + g_tDelayCell[ i ], 0., 0.)) ;
-
-        samp_dXt_C.push_back(g_AmpXt_C*GenerateXTalkSample()-> Derivative( (i%4 + 1)*25 + g_tDelayCell[ i ])) ;
-        samp_Xt_L.push_back(g_AmpXt_L*GenerateXTalkSample()-> Derivative( (i%4 + 1)*25 + g_tDelayCell[ i ])) ;
-        //samp_dXt_L.push_back(g_AmpXt_C*XTalk()-> Derivative2( (i%4 + 1)*25 + g_tDelayCell[ i ])) ;
-        samp_Energy.push_back(EnergyPerCell_S2[ i/4 ]*samp_Signal[i]) ;
-        //// Signal combinations
-        
-        /*         samp_SigNoise.push_back(EnergyPerCell_S2[ i/4 ]*(samp_Noise.back() + samp_Signal.back()) ) ;
-         samp_SigXt_C.push_back(EnergyPerCell_S2[ i/4 ]*(samp_Signal.back() + samp_Xt_C.back()) ) ;
-         
-         samp_SigXt_L.push_back(EnergyPerCell_S2[ i/4 ]*(samp_Signal.back() + samp_Xt_L.back()) ) ;
-         samp_SigXt_CL.push_back(EnergyPerCell_S2[ i/4 ]*(samp_Signal.back() + samp_Xt_L.back() + samp_Xt_C.back()) ) ;
-         
-         samp_SigNoiseXt_C.push_back(EnergyPerCell_S2[ i/4 ]*(samp_Noise.back() + samp_Signal.back() + samp_Xt_C.back()) ) ;
-         samp_SigNoiseXt_L.push_back(EnergyPerCell_S2[ i/4 ]*(samp_Noise.back() + samp_Signal.back() + samp_Xt_L.back()) ) ;
-         
-         samp_SigNoiseXt_CL.push_back(EnergyPerCell_S2[ i/4 ]*(samp_Noise.back() + samp_Signal.back() + samp_Xt_C.back() + samp_Xt_L.back()) ) ;
-         
-         */
-        
-        samp_SigNoise.push_back(EnergyPerCell_S2[ i/4 ]*(samp_Noise[i] + samp_Signal[i]) ) ;
-        samp_SigXt_C.push_back (EnergyPerCell_S2[ i/4 ]*(samp_Signal[i] + samp_Xt_C[i]) ) ;
-        
-        samp_SigXt_L.push_back (EnergyPerCell_S2[ i/4 ]*(samp_Signal[i] + samp_Xt_L[i]) ) ;
-        samp_SigXt_CL.push_back(EnergyPerCell_S2[ i/4 ]*(samp_Signal[i] + samp_Xt_L[i] + samp_Xt_C[i]) ) ;
-        
-        samp_SigNoiseXt_C.push_back(EnergyPerCell_S2[ i/4 ]*(samp_Noise[i] + samp_Signal[i] + samp_Xt_C[i]) ) ;
-        samp_SigNoiseXt_L.push_back(EnergyPerCell_S2[ i/4 ]*(samp_Noise[i] + samp_Signal[i] + samp_Xt_L[i]) ) ;
-        
-        samp_SigNoiseXt_CL.push_back(EnergyPerCell_S2[ i/4 ]*(samp_Noise[i] + samp_Signal[i] + samp_Xt_C[i] + samp_Xt_L[i]) ) ;
-        
-    }
-}
 
 void CaloClusterGenerator::FillSignalSamples(double tau_0){
     my_cluster->tau_0 = tau_0;
@@ -668,12 +355,8 @@ void CaloClusterGenerator::FillRecoEnergyTime(){
             cell.second.E_reco_noise = energy_time_reco.first;
             cell.second.tau_reco_noise = energy_time_reco.second;
             
-            energy_time_reco = OptimalFiltering(cell.second.E_truth, cell.second.samples_truth, cell.second.dsamples_truth, cell.second.sampling_noise);
-            
-            cell.second.E_reco_fake = energy_time_reco.first;
-            cell.second.tau_reco_fake = energy_time_reco.second;
-
             signal.clear();
+    
             for (int s = 0; s < cell.second.samples_truth.size(); s++){
                 signal.push_back(cell.second.E_truth*cell.second.samples_truth[s]+cell.second.sampling_noise[s]+cell.second.Xt_C_amplitude*cell.second.Xt_C[s]+cell.second.Xt_L_amplitude*cell.second.Xt_L[s]);
             }
@@ -851,128 +534,6 @@ TMatrixD CorrMatrix(TMatrixD M){
 }// end of function
 
 
-
-// Calculation coefficients for the Optimal Filter to reconstruct energy and time
-void FilterCoefficients(TMatrixD gSig ,
-                        TMatrixD gSigT ,
-                        TMatrixD DgSig ,
-                        TMatrixD DgSigT ,
-                        TMatrixD NoiseMatrix
-                         ){
-    
-    //cout << "CellEner " << CellEner.size() << " EnergySamples " << EnergySamples.size() << "  gSamples  "<< gSamples.size() << "  dgSamples " << dgSamples.size() << " sNoise "<< sNoise.size() << endl;
-    //cin.get() ;
-    // Alvaro thesis, Marco Delmastro thesis and 1994_Signal processing... source
-    /* Double_t ns = sNoise.size(); */
-    Int_t n = 1, inc;
-    TMatrixD aCoef(4,1),
-    bCoef(4,1),
-    A(1,1) ,
-    Atau(1,1) ;
-    TMatrixD Parameters(1,5) ;
-    // Autocorrelation matrix
-
-    TMatrixD Rxx = CorrMatrix(NoiseMatrix) ;
-
-    //NoiseMatrix.Print() ;
-    //Rxx.Print();
-    //cout << "\nCorrelation Noise Matrix order " << Rxx.GetNcols() << " x " << Rxx.GetNrows() << endl;
-    
-    // *****************************
-    // Inverse of Noise Correlation Matrix
-    Rxx.Invert() ;
-    // *****************************
-    
-    //Rxx.Print();
-    //cout << "Inverse Correlation Noise Matrix"  << endl;
-    //cin.get();
-    
-    //     InvAutCorr.Print();
-    // **************************************************
-    //// Parameters
-    Double_t Delta,
-    mu,
-    lambda,
-    k,
-    ro;
-    //cout << " here 1 " << endl;
-
-    TMatrixD Q1 = (gSigT  * Rxx) * gSig ;              // Q1  = g^T * R^{1} - g
-    TMatrixD Q2 = (DgSigT * Rxx) * DgSig ;             // Q2  = g'^T * R^{1} - g'
-    TMatrixD Q3 = (DgSigT * Rxx) * gSig ;              // Q3  = g'^T * R^{1} - g
-   // cout << " here 2" << endl;
-
-    Parameters(0,0) =  Delta  =  Q1(0,0) * Q2(0,0) - Q3(0,0) * Q3(0,0) ;
-    Parameters(0,1) =  mu     =  Q3(0,0)/Delta ;
-    Parameters(0,2) =  lambda =  Q2(0,0)/Delta ;
-    Parameters(0,3) =  ro     = -Q1(0,0)/Delta ;
-    Parameters(0,4) =  k      = -Q3(0,0)/Delta ;
-    //cout << " here 3" << endl;
-
-    /*         cout << "Q1     = " << Q1(0,0) << endl ;
-     cout << "Q2     = " << Q2(0,0) << endl ;
-     cout << "Q3     = " << Q3(0,0) << endl ;
-     cout << "Delta  = " << Delta << endl ;
-     cout << "mu     = " << mu << endl ;
-     cout << "lambda = " << lambda << endl ;
-     cout << "ro     = " << ro << endl ;
-     cout << "k      = " << k << endl ;  */
-    
-    //cin.get();
-    //cout << "gSig  Matrix order             " << gSig.GetNcols() << " x " << gSig.GetNrows() << endl ;
-    //gSig.Print() ;
-    
-    //cout << "DgSig Matrix order             " << DgSig.GetNcols() << " x " << DgSig.GetNrows() << endl ;
-    //DgSig.Print() ;
-    
-    //cin.get() ;
-    
-    aCoef = lambda * (Rxx * gSig) +  k * (Rxx * DgSig);
-    bCoef =  mu    * (Rxx * gSig) + ro * (Rxx * DgSig);
-    //cout << " here 4" << endl;
-
-    /*         cout << "a coefficients " << endl;
-     aCoef.Print();
-     cout << "b coefficients " << endl;
-     bCoef.Print(); */
-    
-    A    = aCoef.T()*gSig ;
-    Atau = bCoef.T()*gSig ;
-    
-    //cout << "from martons:: E: " <<A(0,0)  << " E*tau: " << Atau(0,0) << endl;
-
-    //cout << "aCoef Matrix order             " << aCoef.GetNcols() << " x " << aCoef.GetNrows() << endl ;
-    //aCoef.Print() ;
-    //cout << "Si Matrix order                " << Si.GetNcols() << " x " << Si.GetNrows() << endl ;
-    //Si.Print() ;
-    /*         cout << " ================================= " << endl;
-     cout << " ========= Verifying ============= " << endl;
-     cout << " Amplitude of the Energy on cell = " << CellEner[cell] << endl ;
-     cout << " Amplitude reconstructed     A   = " << A(0,0) << endl;
-     cout << " Time of fly tau                 = " << Atau(0,0)/A(0,0) << endl ;
-     cout << " ================================= " << endl; */
-   // Amp = A(0,0) ;
-    //tau = Atau(0,0)/A(0,0) ;
-    //cin.get() ;
-    
-} // end function FilterCoefficients
-
-void CaloClusterGenerator::CleanUp(){
-    for (int l = 0; l < n_layers; l++ ){
-        for (auto &cell : my_cluster->layers[l].layer_cells_map){
-            cell.second.sampling_noise.clear();
-            cell.second.samples_truth.clear();
-            cell.second.dsamples_truth.clear();
-            cell.second.Xt_C.clear();
-            cell.second.dXt_C.clear();
-            cell.second.Xt_L.clear();
-            cell.second.dXt_L.clear();
-            cell.second.samples_reco.clear();
-            cell.second.sampling_delay.clear();
-        }
-    }
-}
-
 vector<CaloClusterGenerator::ClusterCell*> CaloClusterGenerator::GetListOfNeighbours(int layer, int eta, int phi, bool includeDiagonal){
     //layer number should start from 0
     layer -=1;
@@ -1061,93 +622,28 @@ void CaloClusterGenerator::FillXtalkAmplitudes(bool ifxtc, bool ifxtl){
     
 }
 
+void CaloClusterGenerator::CleanUp(){
+    for (int l = 0; l < n_layers; l++ ){
+        for (auto &cell : my_cluster->layers[l].layer_cells_map){
+            cell.second.sampling_noise.clear();
+            cell.second.samples_truth.clear();
+            cell.second.dsamples_truth.clear();
+            cell.second.Xt_C.clear();
+            cell.second.dXt_C.clear();
+            cell.second.Xt_L.clear();
+            cell.second.dXt_L.clear();
+            cell.second.samples_reco.clear();
+            cell.second.sampling_delay.clear();
+        }
+    }
+}
+
 
 Double_t RecTimeNoNoise(TVectorD gSignal, TVectorD DgSignal, TVectorD SigSamples, Double_t EnoNoise){
     Double_t time ;
     time = (gSignal(3)*gSignal(2)*gSignal(1)*SigSamples(0) - gSignal(3)*gSignal(2)*gSignal(0)*SigSamples(1))/
     ((gSignal(3)*gSignal(2)*gSignal(1)*DgSignal(0) - gSignal(3)*gSignal(2)*gSignal(0)*DgSignal(1))*EnoNoise) ;
     return time ;
-}
-
-pair<double,double> CaloClusterGenerator::OptimalFiltering( double e_truth, vector<double> gt, vector<double> dgt, vector<double> noise){
-    double reco_energy = 0;
-    double reco_time = 0;
-    int n_signals = gt.size();
-    TMatrixD noise_matrix(1,4);
-    TMatrixD Rxx(4,4);
-    TMatrixD m_noise_matrix(1,4), gsig(4,1), gsigt(1,4), dgsig(4,1), dgsigt(1,4);
-
-    TVectorD noise_v(n_signals), gt_v(n_signals), dgt_v(n_signals), signal_v(n_signals), s_truth(n_signals);
-    
-    for (int s = 0; s < gt.size(); s++) {
-   //     cout <<  noise[s] << endl;
-        noise_v[s] = noise[s];
-        noise_matrix[0][s] =noise[s];
-        s_truth[s]  = gt[s]*e_truth;
-        signal_v[s] = gt[s]*e_truth + noise[s];
-        
-        m_noise_matrix[0][s] =noise[s];
-        gsig[s][0] =gt[s];
-        gsigt[0][s] =gt[s];
-        dgsig[s][0] =dgt[s];
-        dgsigt[0][s] =dgt[s];
-        
-
-        gt_v[s] = gt[s];
-        dgt_v[s] = dgt[s];
-    }
-    
-   // FilterCoefficients(gsig, gsigt,  dgsig, dgsigt, m_noise_matrix);
-    
-   // TMatrixD noiseCovMatrix = this->GetCorrelationMatrix(noise_v);
-   // noiseCovMatrix.Print();
-    Rxx = CorrMatrix(noise_matrix);
-    Rxx.Invert() ;
-
-    
-    double Q1 = gt_v  * (Rxx * gt_v) ;              // Q1  = g^T * R^{1} - g
-    double Q2 = dgt_v * (Rxx * dgt_v) ;             // Q2  = g'^T * R^{1} - g'
-    double Q3 = dgt_v * (Rxx * gt_v) ;              // Q3  = g'^T * R^{1} - g
-    
-    double Delta  =  Q1 * Q2 - Q3 * Q3;
-    double mu     =  Q3/Delta ;
-    double lambda =  Q2/Delta ;
-    double ro     = -Q1/Delta ;
-    double k      = -Q3/Delta ;
-    
-    TVectorD aCoef = lambda * (Rxx * gt_v) +  k * (Rxx * dgt_v);
-    TVectorD bCoef =  mu    * (Rxx * gt_v) + ro * (Rxx * dgt_v);
-    
-    double E_reco = aCoef*signal_v;
-    double tau = bCoef* signal_v;
-    
-   // aCoef.Print();
-   // bCoef.Print();
-    
-    TVectorD ai_precalc(n_samples);
-    TVectorD bi_precalc(n_samples);
-    
-    for (int r = 0; r < ai.size(); r++){
-        ai_precalc[r] = ai[r];
-        bi_precalc[r] = bi[r];
-        
-    }
-   // ai_precalc.Print();
-   // bi_precalc.Print();
-   // cout << "tau = 0: " << endl;
-   // cout << "E_truth: " << e_truth << " E_reco: " <<E_reco << " E*tau: " << tau/E_reco << endl;
-//    cout << "Erectimenonoise: " << RecTimeNoNoise( gt_v,  dgt_v,  s_truth,  e_truth) << endl;
-   // cout << "tau = 0.5: " << endl;
-    //cout << "E_truth_precalc: " << e_truth << " E_reco: " <<ai_precalc*signal_v << " E*tau precalc: " << bi_precalc*signal_v/(ai_precalc*signal_v) << endl;
-    //cout << "Erectimenonoise precalc: " << RecTimeNoNoise( gt_v,  dgt_v,  s_truth,  e_truth) << endl;
-    
-    //reco_energy = ai_precalc*signal_v;
-    //reco_time = bi_precalc*signal_v/reco_energy;
-    
-    reco_energy = E_reco;
-    reco_time = tau/E_reco;
-    
-    return make_pair(reco_energy, reco_time);
 }
 
 pair<vector<double>,vector<double>> CaloClusterGenerator::OptimalFilteringInit( vector<double> gt, vector<double> dgt, vector<double> noise){
@@ -1176,10 +672,6 @@ pair<vector<double>,vector<double>> CaloClusterGenerator::OptimalFilteringInit( 
         dgt_v[s] = dgt[s];
     }
     
-    // FilterCoefficients(gsig, gsigt,  dgsig, dgsigt, m_noise_matrix);
-    
-    // TMatrixD noiseCovMatrix = this->GetCorrelationMatrix(noise_v);
-    // noiseCovMatrix.Print();
     Rxx = CorrMatrix(noise_matrix);
     Rxx.Invert() ;
     

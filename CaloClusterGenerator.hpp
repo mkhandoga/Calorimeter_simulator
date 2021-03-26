@@ -28,7 +28,7 @@ class CaloClusterGenerator
 {
 
     public:
-    pair<double,double> OptimalFiltering(double e_truth, vector<double> gt, vector<double> dgt, vector<double> noise);
+
     pair<vector<double>,vector<double>> OptimalFilteringInit(vector<double> gt, vector<double> dgt, vector<double> noise);
     pair<double,double> GetRecoEnergyTime( vector<double> signal);
 
@@ -78,9 +78,8 @@ class CaloClusterGenerator
         
         double E_reco_fake;
         double tau_reco_fake;
-        
-    } ;
-    
+    };
+
     
     int const static n_layers = 3;
     struct ClusterLayer {
@@ -107,6 +106,7 @@ class CaloClusterGenerator
         double E_reco;
         double E_truth;
     };
+    
     struct CellCluster {
         ClusterLayer layers[n_layers];
         
@@ -123,17 +123,10 @@ class CaloClusterGenerator
         double E_truth;
     };
     void InitOpFiltCoefficients();
-    vector <double> GenerateRandomDelays(Int_t n_etaL2, Int_t n_PhiL2, Int_t n_samples);
-    
-    void GetClusterLimits( Double_t Lay, Double_t& dPhi, Double_t& dEta, Double_t& nPhi, Double_t& nEta, Double_t& Rmin, Double_t& Rmax );
-    
-    void AdjustCoordinates( Double_t &dEta, Double_t &nEta, Double_t &EtaMin, Double_t &dPhi, Double_t &nPhi, Double_t &PhiMin );
     
     void FillClusterEnergy(double e_impact);
     
     Double_t IntegEnerCell( Double_t EtaMin ,Double_t EtaMax , Double_t PhiMin, Double_t PhiMax, Double_t Rmin, Double_t Rmax );
-    
-    Int_t EnergyMeVtoADC(Double_t E_cell, Int_t Layer);
     
     void InitCluster(double cluster_center_eta, double cluster_center_phi, int eta_size = 5, int phi_size = 5);
 
@@ -151,36 +144,10 @@ class CaloClusterGenerator
     
     void  FillTree();
     TMatrixD GetCorrelationMatrix( TVectorD vect);
+    
     vector<ClusterCell*> GetListOfNeighbours(int layer, int eta, int phi, bool includeDiagonal);
     
     void CleanUp();
-
-    void GetClusterEnergy( Bool_t fluctEnergy,
-                          vector<Double_t> &E0_impact,
-                          vector<Double_t> &sumEnergyLayer,
-                          vector<Double_t> &EnergyPerCell_S1,
-                          vector<Double_t> &EnergyADC_S1,
-                          vector<Double_t> &EnergyPerCell_S2,
-                          vector<Double_t> &EnergyADC_S2,
-                          vector<Double_t> &EnergyPerCell_S3,
-                          vector<Double_t> &EnergyADC_S3 );
-
-    void GenerateCellSamples(vector<Double_t> EnergyPerCell_S2,
-                              vector<Double_t> &samp_Energy ,
-                              vector<Double_t> &samp_Signal ,
-                              vector<Double_t> &samp_dSignal,
-                              vector<Double_t> &samp_Xt_C  ,
-                              vector<Double_t> &samp_dXt_C ,
-                              vector<Double_t> &samp_Xt_L  ,
-                              vector<Double_t> &samp_dXt_L ,
-                              vector<Double_t> &samp_Noise ,
-                              vector<Double_t> &samp_SigNoise ,
-                              vector<Double_t> &samp_SigXt_C ,
-                              vector<Double_t> &samp_SigXt_L ,
-                              vector<Double_t> &samp_SigXt_CL ,
-                              vector<Double_t> &samp_SigNoiseXt_C ,
-                              vector<Double_t> &samp_SigNoiseXt_L ,
-                              vector<Double_t> &samp_SigNoiseXt_CL );
     
     TF1* GenerateSignalSample();
     TF1* GenerateXTalkSample();
@@ -192,9 +159,6 @@ class CaloClusterGenerator
     private:
     int n_samples = 4;
 
-    //, bi;
-    
-    
     TF3* IntegraCell;
     TF1* CellM;
     TF1* XTalk;
@@ -331,7 +295,6 @@ class CaloClusterGenerator
     Double_t Tsamp = (1 - e)*t2 + t1sam/Fs + Thom ;
 
     vector <double> cell_truth_energies_l2;
-    
     vector <double> cell_reco_noise_energies_l2;
     vector <double> cell_reco_noiseXT_energies_l2;
     vector <double> cell_fake_energies_l2;
