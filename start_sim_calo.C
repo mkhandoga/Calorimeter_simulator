@@ -76,17 +76,19 @@ int start_sim_calo() {
 
     //new_cluster->GenerateRandomDelays(5, 5, 4);
     double impact_energy = 50000;
-    double tau_0 = 0.2;
-    for (int i = 0; i < 1000; i++) {
+    double tau_0 = 0.5;
+    for (int i = 0; i <1500; i++) {
         cout << "iteration: " << i << endl;
         new_cluster->FillClusterEnergy(impact_energy);
         new_cluster->FillSignalSamples(tau_0);
+        new_cluster->FillRecoEnergyTime();
         new_cluster->FillTree();
         new_cluster->CleanUp();
 
     }
     
     new_cluster->ClusterTree->Write();    
+    delete new_cluster;
     calo_out->Close();
     
 /*

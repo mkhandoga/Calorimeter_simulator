@@ -28,7 +28,10 @@ class CaloClusterGenerator
 {
 
     public:
-    pair<double,double> OptimalFiltering(vector<double> signal, vector<double> dsignal, vector<double> noise);
+    pair<double,double> OptimalFiltering(double e_truth, vector<double> gt, vector<double> dgt, vector<double> noise);
+    pair<vector<double>,vector<double>> OptimalFilteringInit(vector<double> gt, vector<double> dgt, vector<double> noise);
+    pair<double,double> GetRecoEnergyTime( vector<double> signal);
+
     void FillXtalkAmplitudes(bool ifxtc, bool ifxtl);
 
     CaloClusterGenerator();
@@ -52,9 +55,9 @@ class CaloClusterGenerator
         std::vector<double> dsamples_truth;
         std::vector<double> samples_truthXtC;
         std::vector<double> dsamples_truthXtC;
+        std::vector<double> sampling_delay;
 
         std::vector<double> Xt_C;
-
         std::vector<double> dXt_C;
         std::vector<double> Xt_L;
         std::vector<double> dXt_L;
@@ -63,9 +66,19 @@ class CaloClusterGenerator
         
         double Xt_C_amplitude;
         double Xt_L_amplitude;
+        
         double E_truth;
-        double E_reco;
-        double tau;
+        
+        double E_reco_noise;
+        double tau_reco_noise;
+
+        double E_reco_noiseXT;
+        double tau_reco_noiseXT;
+
+        
+        double E_reco_fake;
+        double tau_reco_fake;
+        
     } ;
     
     
@@ -104,10 +117,12 @@ class CaloClusterGenerator
         double r_min;
         double r_max;
         
+        double E_impact;
+        double tau_0;
         double E_reco;
         double E_truth;
     };
-    
+    void InitOpFiltCoefficients();
     vector <double> GenerateRandomDelays(Int_t n_etaL2, Int_t n_PhiL2, Int_t n_samples);
     
     void GetClusterLimits( Double_t Lay, Double_t& dPhi, Double_t& dEta, Double_t& nPhi, Double_t& nEta, Double_t& Rmin, Double_t& Rmax );
@@ -129,6 +144,8 @@ class CaloClusterGenerator
     void FillSignalSamples(double tau_0);
 
     void InitTree(string TreeName);
+    
+    void FillRecoEnergyTime();
     
     void InitFunctions();
     
@@ -168,8 +185,15 @@ class CaloClusterGenerator
     TF1* GenerateSignalSample();
     TF1* GenerateXTalkSample();
     CellCluster* my_cluster = new CellCluster;
-
+    
+    vector<double> ai;
+    vector<double> bi;
+    
     private:
+    int n_samples = 4;
+
+    //, bi;
+    
     
     TF3* IntegraCell;
     TF1* CellM;
@@ -214,7 +238,6 @@ class CaloClusterGenerator
     Double_t g_nPoints = g_window/g_dt ;    // number of points for a window of 600 ns
     Double_t g_tSamp   =   25.0  ;          // sample time in ns
     Double_t g_nSamp   =    4.0  ;          // number of samples
-    int n_samples = 4;
     
     vector<Double_t> g_tDelayCell ;
     
@@ -307,15 +330,27 @@ class CaloClusterGenerator
     Double_t Fs = g_X0eff/(g_da + g_dp) ;
     Double_t Tsamp = (1 - e)*t2 + t1sam/Fs + Thom ;
 
-    vector <double> cell_energies_l2;
+    vector <double> cell_truth_energies_l2;
+    
+    vector <double> cell_reco_noise_energies_l2;
+    vector <double> cell_reco_noiseXT_energies_l2;
+    vector <double> cell_fake_energies_l2;
+
+    vector <double> cell_reco_noise_tau_l2;
+    vector <double> cell_reco_noiseXT_tau_l2;
+    vector <double> cell_fake_tau_l2;
+    vector <double> cell_t_delay_l2;
+    
     vector <double> cell_signal_samples_l2;
     vector <double> cell_noise_samples_l2;
     vector <double> cell_xtc_samples_l2;
     vector <double> cell_xtl_samples_l2;
     vector <double> cell_xtc_amplitudes_l2;
     vector <double> cell_xtl_amplitudes_l2;
+    
     double layer2_energy;
     double impact_energy;
+    double tau_0;
 
 
 };
