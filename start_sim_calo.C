@@ -11,20 +11,38 @@
 #include "TMath.h"
 #include "CaloClusterGenerator.cpp"
 #include "inv_functions.cpp"
+#include <ctime>
+
 using namespace std;
 
 int start_sim_calo() {
 
-    TString fileName = "calo_sim_output.root";
+    time_t now = time(0);   
+    tm *gmtm = localtime(&now);
+    TString timestamp = to_string(1+gmtm->tm_mon) + to_string(gmtm->tm_mday) + to_string(gmtm->tm_hour) + to_string(gmtm->tm_min);
+    
+    double impact_energy_mean = 50000;
+    double tau_0_mean = 0;
+    double energu_std = 10000;
+    double tau_std = 0.5;
+    double tau_0 = 0;
+    double impact_energy = 0;
+    double n_samples = 20000;
+
+    TString fileName = "calo_sim_" +TString(to_string(int(n_samples/1000)))+"k_"+ timestamp+ ".root";
     TFile* calo_out = TFile::Open(fileName,"recreate");
 
+    
     CaloClusterGenerator* new_cluster = new CaloClusterGenerator();
 
-    double impact_energy = 50000;
-    double tau_0 = 0.5;
-    for (int i = 0; i <3; i++) {
+    TRandom3* RandomGen = new TRandom3();
+
+
+    for (int i = 0; i <n_samples; i++) {
         cout << "iteration: " << i << endl;
+        impact_energy = abs(RandomGen->Gaus(impact_energy_mean,energu_std));
         new_cluster->FillClusterEnergy(impact_energy);
+        tau_0 = RandomGen->Gaus(tau_0_mean,tau_std);
         new_cluster->FillSignalSamples(tau_0);
         new_cluster->FillRecoEnergyTime();
         new_cluster->FillTree();

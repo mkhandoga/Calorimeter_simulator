@@ -146,10 +146,18 @@ void CaloClusterGenerator::InitSideLayers(ClusterLayer &central_layer, ClusterLa
 void CaloClusterGenerator::InitLayerCells(ClusterLayer &layer ){
     ClusterCell cur_cell;
     pair<int,int> address;
+    
+    //made those constant such that different generations are compatible
+    
+    double cell_delay_array[5][5] = {        {0.01104874, 0.07629149, 0.03899537, 0.05860147, 0.037892},
+                                             {0.00343592, 0.07069705, 0.01223845, 0.01493271, 0.0039658},
+                                             {0.08320983, 0.02148166, 0.09008852, 0.07107745, 0.08419184},
+                                             {0.0764359 , 0.00063068, 0.01072994, 0.00875502, 0.01054128},
+                                             {0.01770105, 0.07466932, 0.03848953, 0.0269902 , 0.07476519}};
+    
     for (int e = 0; e < layer.n_cells_eta; e++) {
         for (int p = 0; p < layer.n_cells_phi; p++) {
             address = make_pair(e,p);
-            //layer.layer_cells.push_back(cur_cell);
             layer.layer_cells_map[address] = cur_cell;
 
             layer.layer_cells_map[address].eta_in_cluster = e;
@@ -163,9 +171,14 @@ void CaloClusterGenerator::InitLayerCells(ClusterLayer &layer ){
             //cout <<"layer: " << layer.layer_number << " phi_min " << layer.layer_cells_map[address].phi_min << endl;
             //cout <<"layer: " << layer.layer_number << " phi_max " << layer.layer_cells_map[address].phi_max << endl;
 
+            //cell_delay = abs(RandomGen->Gaus(0, 0.1));
+            
+            layer.layer_cells_map[address].sampling_delay = cell_delay_array[e][p];
+            
             layer.layer_cells_map[address].r_min = layer.r_min;
             layer.layer_cells_map[address].r_max = layer.r_max;
             layer.layer_cells_map[address].layer = layer.layer_number;
+            
 
         }
     }
@@ -280,13 +293,14 @@ Double_t CaloClusterGenerator::IntegEnerCell( Double_t EtaMin ,
     
     double epsilon = 1e-6;
     int r = 0;
+    int regul_iterations = 5;
     
-    if (isnan(integral)){
-        cout << "Integral is NaN. Trying to regularize." << endl;
-        while (isnan(integral) && r < 3) {
+    if (isnan(integral) || isinf(integral)){
+        cout << "Integral is NaN or Inf. Trying to regularize." << endl;
+        while ((isnan(integral) || isinf(integral)) && r < regul_iterations) {
             integral = IntegraCell -> Integral( EtaMin, EtaMax-r*epsilon, PhiMin+r*epsilon, PhiMax, Rmin, Rmax, 1e-6 );
             r++;
-            cout << "Regularization iteration " << r << " out of 3. Integral: " << integral << endl;
+            cout << "Regularization iteration " << r << " out of " << regul_iterations << ". Integral: " << integral << endl;
         }
     }
     return integral ;
@@ -297,23 +311,20 @@ Double_t CaloClusterGenerator::IntegEnerCell( Double_t EtaMin ,
 void CaloClusterGenerator::FillSignalSamples(double tau_0){
     my_cluster->tau_0 = tau_0;
 
-    double cell_delay = 0;
     
     for (int l = 0; l < n_layers; l++){
         cout << "Starting filling layer with signal samples with tau_0: "<< tau_0 << " at layer: "  << my_cluster->layers[l].layer_number << endl;
         map<pair<int,int>,ClusterCell>::iterator cell_iterator;
         for (cell_iterator = my_cluster->layers[l].layer_cells_map.begin(); cell_iterator != my_cluster->layers[l].layer_cells_map.end(); cell_iterator++){
             for (int s = 1; s <= n_samples; s++){
-                cell_delay = (RandomGen->Gaus(0, 0.3));
-                cell_iterator->second.sampling_delay.push_back(cell_delay);
                 cell_iterator->second.sampling_noise.push_back(g_AmpNoise/g_ToNormNoise*RandomGen->Gaus (0, 2));
-                cell_iterator->second.samples_truth.push_back(GenerateSignalSample()-> Eval( s*g_tSamp +cell_delay + tau_0, 0., 0.));
-                cell_iterator->second.dsamples_truth.push_back(GenerateSignalSample()-> Derivative( s*g_tSamp + cell_delay+ tau_0, 0, 0.));
+                cell_iterator->second.samples_truth.push_back(GenerateSignalSample()-> Eval( s*g_tSamp +cell_iterator->second.sampling_delay + tau_0, 0., 0.));
+                cell_iterator->second.dsamples_truth.push_back(GenerateSignalSample()-> Derivative( s*g_tSamp + cell_iterator->second.sampling_delay+ tau_0, 0, 0.));
 
-                cell_iterator->second.Xt_C.push_back(GenerateXTalkSample()-> Eval( s*g_tSamp + cell_delay+tau_0));
-                cell_iterator->second.dXt_C.push_back(GenerateXTalkSample()-> Derivative( s*g_tSamp + cell_delay+tau_0));
+                cell_iterator->second.Xt_C.push_back(GenerateXTalkSample()-> Eval( s*g_tSamp + cell_iterator->second.sampling_delay+tau_0));
+                cell_iterator->second.dXt_C.push_back(GenerateXTalkSample()-> Derivative( s*g_tSamp + cell_iterator->second.sampling_delay+tau_0));
 
-                cell_iterator->second.Xt_L.push_back(GenerateXTalkSample()-> Eval( s*g_tSamp + cell_delay + tau_0));
+                cell_iterator->second.Xt_L.push_back(GenerateXTalkSample()-> Eval( s*g_tSamp + cell_iterator->second.sampling_delay + tau_0));
             //    cell_iterator->second.samples_truthXtC.push_back(cell_iterator->second.samples_truth.back()+cell_iterator->second.Xt_C.back());
             //    cell_iterator->second.dsamples_truthXtC.push_back(cell_iterator->second.dsamples_truth.back()+cell_iterator->second.dXt_C.back());
 
@@ -444,14 +455,14 @@ void CaloClusterGenerator::FillTree(){
         cell_reco_noise_tau_l2.push_back(cell_iterator->second.tau_reco_noise);
         cell_reco_noiseXT_tau_l2.push_back(cell_iterator->second.tau_reco_noiseXT);
         cell_fake_tau_l2.push_back(cell_iterator->second.tau_reco_fake);
-        
+        cell_t_delay_l2.push_back(cell_iterator->second.sampling_delay);
+
         for (int s = 0; s < n_samples; s++) {
             cell_signal_samples_l2.push_back(cell_iterator->second.samples_truth[s]);
             cell_noise_samples_l2.push_back(cell_iterator->second.sampling_noise[s]);
             cell_xtc_samples_l2.push_back(cell_iterator->second.Xt_C[s]);
             cell_xtl_samples_l2.push_back(cell_iterator->second.Xt_L[s]);
             
-            cell_t_delay_l2.push_back(cell_iterator->second.sampling_delay[s]);
 
         }
        // cout << "eta : " << cell_iterator->second.eta_in_cluster  <<" phi : " << cell_iterator->second.phi_in_cluster  << " etruth "<< cell_iterator->second.E_truth  << endl;
@@ -633,7 +644,7 @@ void CaloClusterGenerator::CleanUp(){
             cell.second.Xt_L.clear();
             cell.second.dXt_L.clear();
             cell.second.samples_reco.clear();
-            cell.second.sampling_delay.clear();
+            //cell.second.sampling_delay.clear();
         }
     }
 }

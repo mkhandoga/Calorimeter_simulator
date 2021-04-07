@@ -55,7 +55,6 @@ class CaloClusterGenerator
         std::vector<double> dsamples_truth;
         std::vector<double> samples_truthXtC;
         std::vector<double> dsamples_truthXtC;
-        std::vector<double> sampling_delay;
 
         std::vector<double> Xt_C;
         std::vector<double> dXt_C;
@@ -66,7 +65,8 @@ class CaloClusterGenerator
         
         double Xt_C_amplitude;
         double Xt_L_amplitude;
-        
+        double sampling_delay;
+
         double E_truth;
         
         double E_reco_noise;
