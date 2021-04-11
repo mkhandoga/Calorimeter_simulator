@@ -129,7 +129,7 @@ void CaloClusterGenerator::InitCluster( double cluster_center_eta, double cluste
         my_cluster->layers[l].phi_cell_size = my_cluster->layers[l].phi_cell_size_factor*g_DeltaPhiS2;
     }
     
-    cout <<"layer: " << my_cluster->layers[0].layer_number << " layer.layer_cells.size()" << my_cluster->layers[0].layer_cells.size() << endl;
+    //cout <<"layer: " << my_cluster->layers[0].layer_number << " layer.layer_cells.size()" << my_cluster->layers[0].layer_cells.size() << endl;
 }
 
 void CaloClusterGenerator::InitSideLayers(ClusterLayer &central_layer, ClusterLayer &side_layer ){
@@ -200,16 +200,16 @@ void CaloClusterGenerator::FillClusterEnergy(double e_impact){
     impact_eta = cluster_center_eta - g_DeltaEtaS2/2 +rand_eta*g_DeltaEtaS2;
     impact_phi = cluster_center_phi - g_DeltaPhiS2/2 +rand_phi*g_DeltaPhiS2;
     
-    cout << "cluster_center_eta: " << cluster_center_eta <<  " impact_eta: " << impact_eta <<" rand_eta: "<<rand_eta << endl;
-    cout << "cluster_center_phi: " << cluster_center_phi <<  " impact_phi: " << impact_phi << " rand_phi: "<<rand_phi <<  endl;
+    //cout << "cluster_center_eta: " << cluster_center_eta <<  " impact_eta: " << impact_eta <<" rand_eta: "<<rand_eta << endl;
+    //cout << "cluster_center_phi: " << cluster_center_phi <<  " impact_phi: " << impact_phi << " rand_phi: "<<rand_phi <<  endl;
     
     double layer_energy_theoretical, cluster_energy_sumcells = 0.0, layer_energy_sumcells,  cluster_energy_theoretical, cluster_energy_sumlayers;
     cluster_energy_sumlayers = 0;
     cluster_energy_sumcells = 0;
     
-    cout << "Starting filling the cluster, impact energy: " << e_impact << endl;
+    //cout << "Starting filling the cluster, impact energy: " << e_impact << endl;
     for (int l = 0; l < n_layers; l++){
-        cout << "Starting filling layer " << my_cluster->layers[l].layer_number << endl;
+        //cout << "Starting filling layer " << my_cluster->layers[l].layer_number << endl;
         layer_energy_sumcells = 0;
         map<pair<int,int>,ClusterCell>::iterator cell_iterator;
         for (cell_iterator = my_cluster->layers[l].layer_cells_map.begin(); cell_iterator != my_cluster->layers[l].layer_cells_map.end(); cell_iterator++){
@@ -235,14 +235,14 @@ void CaloClusterGenerator::FillClusterEnergy(double e_impact){
         my_cluster->layers[l].E_truth = layer_energy_sumcells;
 
         layer_energy_theoretical = e_impact*this->IntegEnerCell(my_cluster->layers[l].eta_min, my_cluster->layers[l].eta_max, my_cluster->layers[l].phi_min, my_cluster->layers[l].phi_max, my_cluster->layers[l].r_min, my_cluster->layers[l].r_max);
-        cout << "energy sum_cells: " << layer_energy_sumcells << " energy theoretical: " << layer_energy_theoretical << endl;
+        //cout << "energy sum_cells: " << layer_energy_sumcells << " energy theoretical: " << layer_energy_theoretical << endl;
         cluster_energy_sumcells+=layer_energy_sumcells;
 
         cluster_energy_sumlayers+=layer_energy_theoretical;
 
     }
      cluster_energy_theoretical = e_impact*this->IntegEnerCell(my_cluster->eta_min, my_cluster->eta_max, my_cluster->phi_min, my_cluster->phi_max, my_cluster->r_min, my_cluster->r_max);
-    cout << " cluster energy sum layers: " << cluster_energy_sumlayers << " energy theoretical: " << cluster_energy_theoretical << endl;
+    //cout << " cluster energy sum layers: " << cluster_energy_sumlayers << " energy theoretical: " << cluster_energy_theoretical << endl;
     my_cluster->E_truth = cluster_energy_sumcells;
     FillXtalkAmplitudes(true, true);
 
@@ -295,9 +295,9 @@ Double_t CaloClusterGenerator::IntegEnerCell( Double_t EtaMin ,
     int r = 0;
     int regul_iterations = 5;
     
-    if (isnan(integral) || isinf(integral)){
+    if (std::isnan(integral) || std::isinf(integral)){
         cout << "Integral is NaN or Inf. Trying to regularize." << endl;
-        while ((isnan(integral) || isinf(integral)) && r < regul_iterations) {
+        while ((std::isnan(integral) || std::isinf(integral)) && r < regul_iterations) {
             integral = IntegraCell -> Integral( EtaMin, EtaMax-r*epsilon, PhiMin+r*epsilon, PhiMax, Rmin, Rmax, 1e-6 );
             r++;
             cout << "Regularization iteration " << r << " out of " << regul_iterations << ". Integral: " << integral << endl;
@@ -313,7 +313,7 @@ void CaloClusterGenerator::FillSignalSamples(double tau_0){
 
     
     for (int l = 0; l < n_layers; l++){
-        cout << "Starting filling layer with signal samples with tau_0: "<< tau_0 << " at layer: "  << my_cluster->layers[l].layer_number << endl;
+        //cout << "Starting filling layer with signal samples with tau_0: "<< tau_0 << " at layer: "  << my_cluster->layers[l].layer_number << endl;
         map<pair<int,int>,ClusterCell>::iterator cell_iterator;
         for (cell_iterator = my_cluster->layers[l].layer_cells_map.begin(); cell_iterator != my_cluster->layers[l].layer_cells_map.end(); cell_iterator++){
             for (int s = 1; s <= n_samples; s++){

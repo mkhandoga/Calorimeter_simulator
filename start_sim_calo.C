@@ -15,7 +15,7 @@
 
 using namespace std;
 
-int start_sim_calo() {
+int start_sim_calo(int n_samp, string suffix, string output_dir) {
 
     time_t now = time(0);   
     tm *gmtm = localtime(&now);
@@ -27,10 +27,12 @@ int start_sim_calo() {
     double tau_std = 0.5;
     double tau_0 = 0;
     double impact_energy = 0;
-    double n_samples = 20000;
-
-    TString fileName = "calo_sim_" +TString(to_string(int(n_samples/1000)))+"k_"+ timestamp+ ".root";
-    TFile* calo_out = TFile::Open(fileName,"recreate");
+    //double n_samples = 20000;
+    int n_samples = n_samp;
+    //TString output_dirname = "/eos/atlas/atlascerngroupdisk/phys-sm/LowMu2017WZ/histograms_mykola/Calo_ouput/";
+    TString output_dirname  = output_dir;
+    TString fileName = "calo_sim_" +TString(to_string(int(n_samples/1000)))+"k_"+ timestamp+ "_" +TString(suffix)+".root";
+    TFile* calo_out = TFile::Open(output_dirname+fileName,"recreate");
 
     
     CaloClusterGenerator* new_cluster = new CaloClusterGenerator();
@@ -39,7 +41,7 @@ int start_sim_calo() {
 
 
     for (int i = 0; i <n_samples; i++) {
-        cout << "iteration: " << i << endl;
+        if (i < 10 || (i%100 == 0) ) cout << "iteration: " << i << " out of " << n_samples << endl;
         impact_energy = abs(RandomGen->Gaus(impact_energy_mean,energu_std));
         new_cluster->FillClusterEnergy(impact_energy);
         tau_0 = RandomGen->Gaus(tau_0_mean,tau_std);
